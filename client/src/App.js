@@ -36,7 +36,7 @@ function App() {
     return addressObj
   }
 
-  const name = 'gMapData.'
+  const name = gMapData?.name
   const address = gMapData?.formatted_address
   const addressTypes = getAddresses();
   const fullData = {
@@ -62,21 +62,21 @@ function App() {
   useEffect(() => {
     if (!MAP_API_KEY) alert('Enter your MAP_API_KEY to proceed')
   }, [])
-  
 
 
-  const locationHandle = async (place_id) => {
+
+  const locationHandle = async (place) => {
     // const place_id = 'ChIJa2YT-ahZwokR-FABvLXcKi0'
-    if (place_id) {
+    if (place.place_id) {
       try {
         await axios
           .get(
             "https://maps.googleapis.com/maps/api/geocode/json?place_id=" +
-            place_id +
+            place.place_id +
             `&key=${MAP_API_KEY}`
           )
           .then((response) => {
-            setGMapData(response?.data?.results[0])
+            setGMapData({ ...response?.data?.results[0], name: place?.name })
           });
       }
       catch (err) {
@@ -88,10 +88,23 @@ function App() {
   };
 
   const processChange = debounce((e) => {
-    locationHandle(e)});
-  const handleSubmit = (event) => {
+    locationHandle(e)
+  });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert(`The details are: ${JSON.stringify(fullData)}`)
+    try {
+      const response = await axios.post('/api/fetch-yelp', {
+        name: fullData.name,
+        address: fullData.address,
+        city: fullData.city,
+        state: fullData.state,
+        country: fullData.country
+      })
+      setData(JSON.stringify(response?.data))
+    } catch (errorCatch) {
+      setData(JSON.stringify(errorCatch))
+    }
   }
   return (
     <div className="App">
@@ -103,10 +116,11 @@ function App() {
               apiKey={MAP_API_KEY}
               options={{
                 types: ["establishment"],
+                fields: ['name', 'place_id', 'formatted_address', 'address_components']
               }}
               style={{ borderRadius: 20, marginTop: 10, width: '50%', height: 30, paddingLeft: 10 }}
               onPlaceSelected={(place) => {
-                processChange(place.place_id);
+                processChange(place);
               }}
             />
             {/* <input onKeyUp={processChange} style={{ borderRadius: 20, marginTop: 10, width: '50%', height: 30, paddingLeft: 10 }} /> */}
