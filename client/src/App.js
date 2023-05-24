@@ -65,7 +65,6 @@ function App() {
   }, [])
 
 
-
   const locationHandle = async (place) => {
     // const place_id = 'ChIJa2YT-ahZwokR-FABvLXcKi0'
     if (place.place_id) {
@@ -103,10 +102,10 @@ function App() {
         state: fullData.state,
         country: fullData.country
       })
-      setData(JSON.stringify(response?.data))
+      setData(response?.data)
       setLoading(false)
     } catch (errorCatch) {
-      setData(JSON.stringify(errorCatch))
+      setData(errorCatch)
       setLoading(false)
     }
   }
@@ -159,22 +158,21 @@ function App() {
                 <input type="text" placeholder="Country"
                   value={addressTypes.country} style={{ ...styles.inputBox, ...styles.fullWidth }} />
                 <input type="submit" disabled={loading}
-                  value={loading ? 'Fetching...Please Wait' :'Fetch Yelp Data From Backend'}
+                  value={loading ? 'Fetching...Please Wait' : 'Fetch Yelp Data From Backend'}
                   style={{ ...styles.inputBox, ...styles.fullWidth, backgroundColor: 'transparent', borderWidth: 1, borderColor: 'white', color: 'white' }} />
               </form>
             </>
           ) : null}
         </div>
-        <p style={{ fontSize: 15, alignSelf: 'flex-start', paddingLeft: 10 }}>Data from google map API</p>
-        <div style={{ width: '100%', height: '100%', flex: 3, display: 'flex', paddingLeft: 10, paddingRight: 10 }}>
-          <p style={{
-            fontSize: 15,
-            border: '1px solid grey',
-            minHeight: '100%',
-            overflowY: 'scroll',
-            overflowWrap: 'break-word',
-            padding: 20, color: 'grey', borderRadius: 10, width: '100%'
-          }}>{JSON.stringify(gMapData)}</p>
+        <div style={{ width: '100%', height: '100%', flex: 3, display: 'flex', paddingLeft: 10, justifyContent: 'space-evenly', paddingRight: 10 }}>
+          {data?.businessData?.photos?.length && data?.businessData?.photos.map((image) => (
+            <img
+            key={image}
+              src={image}
+              style={{ width: 200, height: 100 }}
+              alt={name}
+            />
+          ))}
         </div>
       </div>
 
@@ -202,7 +200,7 @@ function App() {
             whiteSpace: 'pre-line',
             padding: 20, color: textColor, borderRadius: 10, width: '100%',
           }}>
-            {!data ? "Loading..." : data}
+            {!data ? "Loading..." : JSON.stringify(data)}
           </p>
         </div>
 
