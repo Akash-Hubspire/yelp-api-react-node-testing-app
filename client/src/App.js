@@ -15,6 +15,7 @@ function debounce(func, timeout = 500) {
 
 function App() {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [gMapData, setGMapData] = useState()
   const [bgColor, setBgColor] = useState('#000000');
   const [textColor, setTextColor] = useState('#FFA500');
@@ -93,6 +94,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true)
     try {
       const response = await axios.post('/api/fetch-yelp', {
         name: fullData.name,
@@ -102,8 +104,10 @@ function App() {
         country: fullData.country
       })
       setData(JSON.stringify(response?.data))
+      setLoading(false)
     } catch (errorCatch) {
       setData(JSON.stringify(errorCatch))
+      setLoading(false)
     }
   }
   return (
@@ -154,28 +158,30 @@ function App() {
                   value={addressTypes.state} style={styles.inputBox} />
                 <input type="text" placeholder="Country"
                   value={addressTypes.country} style={{ ...styles.inputBox, ...styles.fullWidth }} />
-                <input type="submit"
-                  value={'Fetch Yelp Data From Backend'}
+                <input type="submit" disabled={loading}
+                  value={loading ? 'Fetching...Please Wait' :'Fetch Yelp Data From Backend'}
                   style={{ ...styles.inputBox, ...styles.fullWidth, backgroundColor: 'transparent', borderWidth: 1, borderColor: 'white', color: 'white' }} />
               </form>
             </>
           ) : null}
         </div>
-        <p style={{ fontSize: 15, alignSelf: 'flex-start', padding: 10 }}>Server Console</p>
+        <p style={{ fontSize: 15, alignSelf: 'flex-start', paddingLeft: 10 }}>Data from google map API</p>
         <div style={{ width: '100%', height: '100%', flex: 3, display: 'flex', paddingLeft: 10, paddingRight: 10 }}>
           <p style={{
             fontSize: 15,
             border: '1px solid grey',
             minHeight: '100%',
+            overflowY: 'scroll',
+            overflowWrap: 'break-word',
             padding: 20, color: 'grey', borderRadius: 10, width: '100%'
-          }}>{!data ? "Loading..." : data}</p>
+          }}>{JSON.stringify(gMapData)}</p>
         </div>
       </div>
 
       <div className="App-right" style={{ backgroundColor: bgColor, position: 'relative' }}>
         <div style={{ width: '100%', flex: 1, padding: 20, }}>
           <div style={{ display: 'flex', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
-            <p style={{ fontSize: 20, }}>Console Results</p>
+            <p style={{ fontSize: 20, }}>Server Data From Yelp</p>
             <div>
               <input
                 type="color"
@@ -193,9 +199,10 @@ function App() {
             fontSize: 15,
             border: '1px solid white',
             height: '100%',
+            whiteSpace: 'pre-line',
             padding: 20, color: textColor, borderRadius: 10, width: '100%',
           }}>
-            {JSON.stringify(gMapData)}
+            {!data ? "Loading..." : data}
           </p>
         </div>
 

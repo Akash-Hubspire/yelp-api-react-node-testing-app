@@ -14,14 +14,29 @@
 
 .App-left {
   background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+  overflow-y: hidden; /* Disable vertical scrolling */
+  height: 100vh;
+}
+
+.App-left > div:first-child {
+  flex: 1; 
+  height: auto; 
+}
+
+.App-left > div:last-child {
+  flex: 1; 
+  overflow-y: scroll; 
+  padding-top: 20px; 
+  width: 100%;
+}
+
+.App-left > div:last-child::-webkit-scrollbar {
+  width: 8px;
 }
 
 .App-right {
@@ -31,7 +46,6 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Adjusted justify-content */
   font-size: calc(10px + 2vmin);
   padding-bottom: 30px;
   color: white;
