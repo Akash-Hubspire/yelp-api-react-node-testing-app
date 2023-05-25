@@ -3,7 +3,7 @@ import axios from "axios";
 import Autocomplete from "react-google-autocomplete";
 import "./App.css";
 
-const MAP_API_KEY = 'AIzaSyAtUd0LjwhUBK69iGCYOHNl46Oxd2rLbdc';
+const MAP_API_KEY = '';
 
 function debounce(func, timeout = 500) {
   let timer;
