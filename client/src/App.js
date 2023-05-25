@@ -3,7 +3,7 @@ import axios from "axios";
 import Autocomplete from "react-google-autocomplete";
 import "./App.css";
 
-const MAP_API_KEY = '';
+const MAP_API_KEY = 'AIzaSyAtUd0LjwhUBK69iGCYOHNl46Oxd2rLbdc';
 
 function debounce(func, timeout = 500) {
   let timer;
@@ -169,7 +169,7 @@ function App() {
             <img
             key={image}
               src={image}
-              style={{ width: 200, height: 100 }}
+              style={{ width: '30%', height: '60%', objectFit: 'cover' }}
               alt={name}
             />
           ))}
